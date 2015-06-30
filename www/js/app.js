@@ -24,11 +24,19 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ionic.service.deploy'
       $rootScope.token = data.token;
     });
 
-    $ionicPush.register({
-      senderID: '902626345902' // This is the Project Number in console.developers.google.com.
-    }).then(function(deviceToken) {
-      var device_token = deviceToken;
-      alert(device_token);
+    var user = $ionicUser.get();
+    if (!user.user_id) {
+      user.user_id = $ionicUser.generateGUID();
+    }
+
+    $ionicUser.identify(user).then(function() {
+      $ionicPush.register({
+        senderID: '902626345902' // This is the Project Number in console.developers.google.com.
+      }, user).then(function(deviceToken) {
+        var device_token = deviceToken;
+        alert(device_token);
+      });
+      return true;
     });
   });
 })
