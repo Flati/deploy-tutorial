@@ -1,0 +1,61 @@
+Assuming $PROJECT is the root of the project folder.
+I was working on Ubuntu 14.04, windows experience may differ.
+
+Building for Android.
+1. Install Android SDK.
+  a. Set ANDROID_HOME environmental variable to SDK folder.
+  b. Add $ANDROID_HOME/tools:$ANDROID_HOME/platform-tools to $PATH
+2. Install Java JDK.
+  a. Set JAVA_HOME environmental variable to JDK folder.
+  b. Add $JAVA_HOME/bin to $PATH
+3. In $PROJECT run: ionic platform add android
+4. In $PROJECT run: ionic build android (From now on, this is the only thing required to build the project)
+
+This will produce an .apk file: $PROJECT/platforms/android/build/outputs/apk/android-debug.apk
+This .apk file can be uploaded to any android device and installed.
+
+
+Making phone calls from app.
+1. In $PROJECT run: ionic plugin add cordova-plugin-whitelist
+2. Add to $PROJECT/config.xml
+  a. <access origin="tel:*" launch-external="yes" />
+  b. <allow-intent href="tel:*" />
+3. Add links to the project: <a href="tel:+354-772-0105">Call Me!</a>
+
+
+Sending emails from app.
+1. In $PROJECT run: ionic plugin add cordova-plugin-whitelist
+2. Add to $PROJECT/config.xml
+  a. <access origin="mailto:*" launch-external="yes" />
+  b. <allow-intent href="mailto:*" />
+3. Add links to the project: <a href="mailto:haflidi@kodi.is">Mail Me!</a>
+
+
+Enable Push Notifications. (https://azure.microsoft.com/en-us/documentation/articles/notification-hubs-overview/)
+1. In $Project run:
+  a. ionic plugin add https://github.com/phonegap-build/PushPlugin
+  b. ionic plugin add https://github.com/katzer/condova-plugin-local-notifications (this is not the official repo but at the time of this writing, the official repo is broken.)
+    i. See https://github.com/katzer/cordova-plugin-local-notifications/issues/426
+2. Add Google Cloud Messaging to project: (https://azure.microsoft.com/en-us/documentation/articles/notification-hubs-android-get-started/)
+  a. Create a new project in console.developers.google.com
+  b. Enable Cloud Messaging for Android under APIs & Auth > APIs > Mobile APIs
+  c. Create API key for the project:
+    i.  Create new Public API access Key under APIs & Auth > Credentials
+    ii. Press Server Key > Leave the box empty and press Create
+  d. Add GCM API key to project:
+    i. in $PROJECT run: ionic push --google-api-key [API key] (looks something like AIzaSyDw7xT23O4npbZBK5smtkAtE60G0t6fnlA)
+3. Add code to angular.run function in app.js (Code can be seen in https://github.com/Flati/deploy-tutorial)
+  $ionicPlatformready(function () {
+    $ionicPush.register({ // This registers the device with the GCM servers and tells it the device is ready to receive push notifications.
+      senderID: '[PROJECT NUMBER]' // Looks something like: 902626345902 can be seen in console.developers.google.com
+    }).then(function(success) {
+      alert(success); // This should make an alert box with "Ok" in it.
+    });
+    
+    $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) { // This returns the token for the device. It will never change on the device, unless you uninstall and reinstall the app.
+      alert('Got token' + data.token + data.platform);
+      // This is where you'd put the logic to register the user and token on your server side.
+      // The server will send this token to the GCM service with the push notification.
+      // See https://www.drupal.org/files/project-images/gcm-a-modr.png
+    });
+  });
