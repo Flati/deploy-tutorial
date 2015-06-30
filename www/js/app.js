@@ -24,34 +24,20 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ionic.service.deploy'
       $rootScope.token = data.token;
     });
 
-    var user = $ionicUser.get();
-    if (!user.user_id) {
-      user.user_id = $ionicUser.generateGUID();
-    }
-
-    angular.extend(user, {
-      name: 'Ionitron',
-      bio: 'I come from planet Ion'
-    });
-
-    $ionicUser.identify(user).then(function() {
-      $ionicPush.register({
-        senderID: '902626345902'
-      }, user).then(function(deviceToken) {
-        var device_token = deviceToken;
-        alert(device_token);
-      });
-    }).catch(function(error) {
-      alert('error' + error);
+    $ionicPush.register({
+      senderID: '902626345902' // This is the Project Number in console.developers.google.com.
+    }).then(function(deviceToken) {
+      var device_token = deviceToken;
+      alert(device_token);
     });
   });
 })
 
 .config(['$ionicAppProvider', function($ionicAppProvider) {
   $ionicAppProvider.identify({
-    app_id: 'b57dea04',
-    api_key: '0327351925e8f25c24ca2f430a40138fa6b462696c842068',
-    gcm_id: '902626345902'
+    app_id: 'b57dea04', // This is the project ID in apps.ionic.io/apps.
+    api_key: '0327351925e8f25c24ca2f430a40138fa6b462696c842068', // This is the public Master API Key in apps.ionic.io/app/b57dea04/config/keys.
+    gcm_id: '902626345902' // This is the Project Number in console.developers.google.com.
   });
 }])
 
