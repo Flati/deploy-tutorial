@@ -18,7 +18,15 @@
     {
       "locator": "https://github.com/driftyco/ionic-plugins-deploy",
       "id": "com.ionic.deploy"
-    }
+    },
+    {
+      "locator": "https://github.com/phonegap-build/PushPlugin",
+      "id": "com.phonegap.plugins.PushPlugin"
+    },
+    "de.appplant.cordova.plugin.local-notification",
+    "cordova-plugin-whitelist"
   ],
-  "cordovaPlatforms": []
+  "cordovaPlatforms": [
+    "android"
+  ]
 }

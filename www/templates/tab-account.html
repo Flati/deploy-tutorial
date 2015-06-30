@@ -5,11 +5,12 @@
         Enable Friends
     </ion-toggle>
     </ion-list>
-    <button class="button button-primary button-block" ng-click="checkForUpdates()">
-      Check for updates
+    <button class="button button-primary button-block" ng-click="printOS()">
+      Check for device info
     </button>
-    <button class="button button-stable button-block button-pulse" ng-if="hasUpdate" ng-click="doUpdate()">
-      Download update
-    </button>
+    <p ng-if="(device != undefined) && (version != undefined)">You are running on {{device}}#{{version}}</p>
+    <p ng-if="android">Android!</p>
+    <p ng-if="ios">IOS!</p>
+    <p ng-if="ipad">IPad!</p>
   </ion-content>
 </ion-view>

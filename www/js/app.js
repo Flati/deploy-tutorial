@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ionic.service.core', 'ionic.service.deploy', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'ionic.service.core', 'ionic.service.deploy', 'ionic.service.push', 'starter.controllers', 'starter.services'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $ionicUser, $ionicPush) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -18,13 +18,40 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ionic.service.deploy'
       // org.apache.cordova.statusbar required
       StatusBar.styleLightContent();
     }
+
+    $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
+      //alert('Got token' + data.token + data.platform);
+      $rootScope.token = data.token;
+    });
+
+    var user = $ionicUser.get();
+    if (!user.user_id) {
+      user.user_id = $ionicUser.generateGUID();
+    }
+
+    angular.extend(user, {
+      name: 'Ionitron',
+      bio: 'I come from planet Ion'
+    });
+
+    $ionicUser.identify(user).then(function() {
+      $ionicPush.register({
+        senderID: '902626345902'
+      }, user).then(function(deviceToken) {
+        var device_token = deviceToken;
+        alert(device_token);
+      });
+    }).catch(function(error) {
+      alert('error' + error);
+    });
   });
 })
 
 .config(['$ionicAppProvider', function($ionicAppProvider) {
   $ionicAppProvider.identify({
     app_id: 'b57dea04',
-    api_key: '0327351925e8f25c24ca2f430a40138fa6b462696c842068'
+    api_key: '0327351925e8f25c24ca2f430a40138fa6b462696c842068',
+    gcm_id: '902626345902'
   });
 }])
 
@@ -37,7 +64,7 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ionic.service.deploy'
   $stateProvider
 
   // setup an abstract state for the tabs directive
-    .state('tab', {
+  .state('tab', {
     url: "/tab",
     abstract: true,
     templateUrl: "templates/tabs.html"

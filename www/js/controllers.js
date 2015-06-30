@@ -1,26 +1,6 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ionic'])
 
-.controller('DashCtrl', function($scope, $ionicDeploy) {
-  $scope.doUpdate = function() {
-    $ionicDeploy.update().then(function(res) {
-      console.log('Ionic Deploy: Update Success!', res);
-    }, function(err) {
-      console.log('Ionic Deploy: Update Error!', err);
-    }, function(prog) {
-      console.log('Ionic Deploy: Progress...', prog);
-    });
-  };
-
-  $scope.checkForUpdates = function() {
-    console.log('Ionic Deploy: Checking for updates.');
-    $ionicDeploy.check().then(function(hasUpdate) {
-      console.log('Ionic Deploy: Update available: ' + hasUpdate);
-      $scope.hasUpdate = hasUpdate;
-    }, function(err) {
-      console.error('Ionic Deploy: Unable to check for updates', err);
-    });
-  };
-})
+.controller('DashCtrl', function() {})
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
@@ -42,6 +22,13 @@ angular.module('starter.controllers', [])
 })
 
 .controller('AccountCtrl', function($scope) {
+  $scope.printOS = function() {
+    $scope.device = ionic.Platform.platform();
+    $scope.version = ionic.Platform.version();
+    $scope.android = ionic.Platform.isAndroid();
+    $scope.ios = ionic.Platform.isIOS();
+    $scope.ipad = ionic.Platform.isIPad();
+  };
   $scope.settings = {
     enableFriends: true
   };
