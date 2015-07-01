@@ -59,3 +59,30 @@ Enable Push Notifications. (https://azure.microsoft.com/en-us/documentation/arti
       // See https://www.drupal.org/files/project-images/gcm-a-modr.png
     });
   });
+4. Formatting a push notification
+  {
+    "tokens": ["TOKENS", "GO", "HERE"],
+    "notification": {
+      "alert": "Message goes here",
+      "ios": {
+        "priority": 10,
+        "badge": 2,
+        "sound": "ping.aiff",
+        "expiry": 1423238641, // Seconds since Epoch. Can be set to zero for a "1-attempt" notification, it's either delivered immediately, or not at all.
+        "contentAvailable": true,
+        "payload": {
+          "$state": "app",
+          "$stateParams": "{\"id\": 1}" // I have no idea why this must be a string, and can't be an object.
+        }
+      },
+      "android": {
+        "collapseKey": "foo",
+        "delayWhileIdle": true,
+        "timeToLive": 300, // Time in seconds the message will be stored by GCM. Can be set to zero for a "1-attempt" notification, it's either delivered immediately, or not at all.
+        "payload": {
+          "$state": "app",
+          "$stateParams": "{\"id\": 1}" // I have no idea why this must be a string, and can't be an object.
+        }
+      }
+    }
+  }
